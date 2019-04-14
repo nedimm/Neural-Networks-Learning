@@ -69,7 +69,7 @@ nn_params = [Theta1(:) ; Theta2(:)];
 %  first so that it will be easier for you to debug. Later, in part 4, you
 %  will get to implement the regularized cost.
 %
-fprintf('\nFeedforward Using Neural Network ...\n')
+fprintf('\n  Feedforward Using Neural Network ...\n')
 
 % Weight regularization parameter (we set this to 0 here).
 lambda = 0;
@@ -77,10 +77,10 @@ lambda = 0;
 J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
                    num_labels, X, y, lambda);
 
-fprintf(['Cost at parameters (loaded from ex4weights): %f '...
-         '\n(this value should be about 0.287629)\n'], J);
+fprintf(['  Cost at parameters (loaded from ex4weights): %f '...
+         '\n  (this value should be about 0.287629)\n'], J);
 
-fprintf('\nProgram paused. Press enter to continue.\n');
+fprintf('\n  Program paused. Press enter to continue.\n');
 pause;
 
 %% =============== Part 4: Implement Regularization ===============
@@ -88,7 +88,7 @@ pause;
 %  continue to implement the regularization with the cost.
 %
 
-fprintf('\nChecking Cost Function (w/ Regularization) ... \n')
+fprintf('\n  Checking Cost Function (w/ Regularization) ... \n')
 
 % Weight regularization parameter (we set this to 1 here).
 lambda = 1;
@@ -96,8 +96,8 @@ lambda = 1;
 J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
                    num_labels, X, y, lambda);
 
-fprintf(['Cost at parameters (loaded from ex4weights): %f '...
-         '\n(this value should be about 0.383770)\n'], J);
+fprintf(['  Cost at parameters (loaded from ex4weights): %f '...
+         '\n  (this value should be about 0.383770)\n\n'], J);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
