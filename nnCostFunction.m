@@ -62,6 +62,9 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+
+%% Part 1 implementation
+
 a1 = [ones(m, 1) X];
 
 z2 = a1 * Theta1';
@@ -78,11 +81,24 @@ for i = 1:m
     yVec(i,y(i)) = 1;
 end
 
+% for i = 1:m
+%     
+%     term1 = -yVec(i,:) .* log(hThetaX(i,:));
+%     term2 = (ones(1,num_labels) - yVec(i,:)) .* log(ones(1,num_labels) - hThetaX(i,:));
+%     J = J + sum(term1 - term2);
+%     
+% end
+% 
+% J = J / m;
+
 J = 1/m * sum(sum(-1 * yVec .* log(hThetaX)-(1-yVec) .* log(1-hThetaX)));
 
 regularator = (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2))) * (lambda/(2*m));
 
 J = J + regularator;
+
+%% Part 2 implementation
+
 
 
 for t = 1:m
@@ -113,19 +129,6 @@ end
 
 Theta1_grad = (1/m) * Theta1_grad + (lambda/m) * [zeros(size(Theta1, 1), 1) Theta1(:,2:end)];
 Theta2_grad = (1/m) * Theta2_grad + (lambda/m) * [zeros(size(Theta2, 1), 1) Theta2(:,2:end)];
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
