@@ -124,12 +124,68 @@ W = rand(L_out, 1 + L_in) * 2 * epsilon_init - epsilon_init;
 ### Backpropagation
 
 Now, we will implement the backpropagation algorithm. Recall that the intuition behind the backpropagation algorithm is as follows. Given a training example $$(x^{(t)}, y^{(t)})$$, we will first run a "forward pass" to compute all the activations throughout the network, including the output value of the hypothesis $$h_Θ(x)$$. Then, for each node `j` in layer `l`, we would like to compute an "error term" $$\delta_j^{(l)}$$ that measures how much that node was "responsible" for any errors in our output.
-For an output node, we can directly measure the difference between the network’s activation and the true target value, and use that to define $$\delta_j^{(3)}$$ δj (since layer 3 is the output layer). For the hidden units, we will compute $$\delta_j^{(l)}$$ based on a weighted average of the error terms of the nodes in layer (l + 1).
+For an output node, we can directly measure the difference between the network’s activation and the true target value, and use that to define $$\delta_j^{(3)}$$ (since layer 3 is the output layer). For the hidden units, we will compute $$\delta_j^{(l)}$$ based on a weighted average of the error terms of the nodes in layer `(l + 1)`.
 
 The backpropagation algorithm is depicted in Figure 3.
 
 ![](https://i.paste.pics/5B6IX.png)
 ***Figure 3 Backpropagation Updates***
+
+We will implement it in 5 steps. The first 4 steps will be implemented in a for-loop with `for t=1:m` performing the calculation on the $$t^{th}$$ training example $$(x^{(t)},y^{(t)})$$. 
+Step 5 will divide the accumulated gradients by `m` to obtain the gradients for the neural network cost function. 
+Detailed description of the steps is as follows:
+
+Step 1. Set the input layer’s values $$(a{(1)})$$ to the t-th training example $$x^{(t)}$$. Perform a feedforward pass (Figure 2), computing the activations $$(z^{(2)},a^{(2)},z^{(3)},a^{(3)})$$ for layers 2 and 3. Note that you need to add `a+1` term to ensure that the vectors of activations for layers $$a^{(1)} and $$^a{(2)} also include the bias unit. In Octave, if a 1 is a column vector, adding one corresponds to `a_1 = [1 ; a_1]`.
+
+Step 2. For each output unit `k` in layer 3 (the output layer), set
+
+![](https://i.paste.pics/5C7E5.png)
+
+where $$y_k\in\{0,1\}$$ indicates whether the current training example belongs to class `k` ($$y_k=1$$), or if it belongs to a different class ($$y_k=0$$).
+
+Step 3. For the hidden layer `l=2`, set
+
+![](https://i.paste.pics/5C7FB.png)
+
+Step 4. Accumulate the gradient from this example using the following formula. Note that you should skip or remove $$\delta_0^{(2)}$$. In Octave, removing $$\delta_0^{(2)}$$ corresponds to `delta_2 = delta_2(2:end)`.
+
+![](https://i.paste.pics/5C7FR.png)
+
+Step 5. Obtain the (unregularized) gradient for the neural network cost function by dividing the accumulated gradients by $$1/m$$:
+
+![](https://i.paste.pics/5C7FX.png)
+
+The code for the 5 steps looks like this:
+```matlab
+for t = 1:m
+	% For the input layer, where l=1:
+	a1 = [1; X(t,:)'];
+
+	% For the hidden layers, where l=2:
+	z2 = Theta1 * a1;
+	a2 = [1; sigmoid(z2)];
+
+	z3 = Theta2 * a2;
+	a3 = sigmoid(z3);
+
+	yy = ([1:num_labels]==y(t))';
+	% For the delta values:
+	delta_3 = a3 - yy;
+
+	delta_2 = (Theta2' * delta_3) .* [1; sigmoidGradient(z2)];
+	delta_2 = delta_2(2:end); % Taking of the bias row
+
+	% delta_1 is not calculated because we do not associate error with the input    
+
+	% Big delta update
+	Theta1_grad = Theta1_grad + delta_2 * a1';
+	Theta2_grad = Theta2_grad + delta_3 * a2';
+end
+
+Theta1_grad = (1/m) * Theta1_grad
+Theta2_grad = (1/m) * Theta2_grad 
+```
+
 
 
 
